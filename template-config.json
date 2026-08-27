@@ -1,0 +1,35 @@
+{
+  "template_id": "aura-real-estate-v1",
+  "template_name": "AuraEstate PropTech SaaS",
+  "author": "Front-End Architect",
+  "dependencies": {
+    "framework": "Bootstrap 5.3.2 (CSS & JS via CDN)",
+    "icons": "FontAwesome 6.4.2 (via CDN)",
+    "fonts": "Google Fonts (Outfit & Inter)"
+  },
+  "global_design_tokens": {
+    "description": "Colors and typography are mapped to CSS :root variables for instant builder theming.",
+    "editable_colors": [
+      { "id": "--brand-primary", "default": "#1A365D", "label": "Primary Brand Color (Backgrounds, Headers)" },
+      { "id": "--brand-accent", "default": "#DD6B20", "label": "Accent Color (Buttons, Prices)" },
+      { "id": "--brand-light", "default": "#F7FAFC", "label": "Section Background Light" },
+      { "id": "--brand-dark", "default": "#2D3748", "label": "Primary Text Color" }
+    ],
+    "editable_fonts": [
+      { "id": "--font-heading", "default": "'Outfit', sans-serif", "label": "Heading Font" },
+      { "id": "--font-body", "default": "'Inter', sans-serif", "label": "Body Font" }
+    ]
+  },
+  "layout_sections": [
+    { "id": "navbar", "is_optional": false, "label": "Header Navigation" },
+    { "id": "hero", "is_optional": false, "label": "Main Hero Banner" },
+    { "id": "features", "is_optional": true, "label": "SaaS Features Grid" },
+    { "id": "properties", "is_optional": true, "label": "Dynamic Property CMS Grid" },
+    { "id": "footer", "is_optional": false, "label": "Footer Area" }
+  ],
+  "editable_content_rules": {
+    "text": "All editable text elements are marked with [data-editable='text'] and a unique [data-id].",
+    "images": "Images are marked with [data-editable='image']. Images are safely wrapped in aspect-ratio containers (.media-container-16-9, .media-container-4-3) with object-fit: cover to prevent user uploads from breaking the layout.",
+    "icons": "Icons are marked with [data-editable='icon'] and expect FontAwesome class strings."
+  }
+}
