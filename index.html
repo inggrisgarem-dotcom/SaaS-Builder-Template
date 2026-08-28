@@ -3,317 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraEstate SaaS Builder Environment</title>
+    <title>Enterprise SaaS Builder | Workspace</title>
     
-    <!-- Google Fonts -->
+    <!-- Enterprise Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=Playfair+Display:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        /* ==========================================
-           1. SAAS APP UI (The Builder Interface)
-           ========================================== */
-        body, html {
-            margin: 0; padding: 0; height: 100vh; overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            background-color: #E2E8F0;
-        }
-
-        .builder-layout {
-            display: flex; height: 100vh; width: 100vw;
-        }
-
-        /* Left Sidebar Panel */
-        .builder-sidebar {
-            width: 320px; background-color: #0F172A; color: #F8FAFC;
-            display: flex; flex-direction: column; border-right: 1px solid #1E293B;
-            z-index: 10;
-        }
-
-        .sidebar-header {
-            padding: 20px; background-color: #1E293B; border-bottom: 1px solid #334155;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-
-        .sidebar-content { padding: 20px; overflow-y: auto; flex-grow: 1; }
-        
-        .control-group { margin-bottom: 25px; background: #1E293B; padding: 15px; border-radius: 8px; border: 1px solid #334155;}
-        .control-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; margin-bottom: 12px; display: block; font-weight: 600; }
-        
-        .form-control-saas, .form-select-saas {
-            background: #0F172A; border: 1px solid #334155; color: white;
-            font-size: 0.85rem; border-radius: 6px; padding: 10px; width: 100%; margin-bottom: 10px;
-        }
-        .form-control-saas:focus { outline: none; border-color: #3B82F6; }
-        
-        .color-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .color-row input[type="color"] { background: none; border: none; width: 35px; height: 35px; padding: 0; cursor: pointer; border-radius: 4px;}
-
-        /* Main Workspace */
-        .builder-main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        
-        .builder-topbar {
-            height: 60px; background-color: #ffffff; border-bottom: 1px solid #CBD5E1;
-            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
-        }
-
-        .canvas-wrapper {
-            flex-grow: 1; overflow: auto; padding: 30px;
-            display: flex; justify-content: center; align-items: flex-start;
-        }
-
-        .canvas-container {
-            width: 100%; max-width: 1200px; background: white;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border-radius: 8px; overflow: hidden; transition: width 0.3s ease;
-        }
-
-        /* ==========================================
-           2. TEMPLATE STYLES (The Canvas Content)
-           ========================================== */
-        #template-root {
-            /* Variables bound to Builder Controls */
-            --brand-primary: #1A365D;
-            --brand-accent: #DD6B20;
-            --font-heading: 'Outfit', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            --radius-md: 12px; --radius-lg: 24px;
+        /* ========================================================
+           BUILDER UI DESIGN SYSTEM (Strict Isolation)
+           ======================================================== */
+        :root {
+            --builder-bg: #0F172A;
+            --builder-surface: #1E293B;
+            --builder-border: #334155;
+            --builder-text: #F8FAFC;
+            --builder-muted: #94A3B8;
+            --builder-accent: #3B82F6;
+            --builder-accent-hover: #2563EB;
+            --builder-success: #10B981;
             
-            font-family: var(--font-body);
-            color: #2D3748;
+            --canvas-bg: #E2E8F0;
+            --topbar-height: 64px;
+            --sidebar-width: 280px;
+            --inspector-width: 320px;
         }
 
-        #template-root h1, #template-root h2, #template-root h3, #template-root h4 {
-            font-family: var(--font-heading); color: var(--brand-primary); font-weight: 700;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; background-color: var(--builder-bg); color: var(--builder-text); }
+
+        /* --- 1. TOP BAR --- */
+        .top-bar {
+            height: var(--topbar-height);
+            background-color: var(--builder-surface);
+            border-bottom: 1px solid var(--builder-border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 100;
         }
-
-        .btn-template {
-            background-color: var(--brand-accent); color: white; padding: 12px 28px;
-            border-radius: var(--radius-md); text-decoration: none; display: inline-block; font-weight: 600;
+        
+        .top-bar-left { display: flex; align-items: center; gap: 20px; }
+        .template-meta { display: flex; flex-direction: column; }
+        .template-name { font-size: 0.9rem; font-weight: 600; color: var(--builder-text); }
+        .save-status { font-size: 0.7rem; color: var(--builder-muted); display: flex; align-items: center; gap: 5px; }
+        .save-status.saved { color: var(--builder-success); }
+        
+        .top-bar-center { display: flex; align-items: center; gap: 5px; background: var(--builder-bg); padding: 4px; border-radius: 6px; border: 1px solid var(--builder-border); }
+        .viewport-btn {
+            background: transparent; border: none; color: var(--builder-muted); width: 36px; height: 36px;
+            border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
         }
+        .viewport-btn:hover { color: var(--builder-text); background: var(--builder-surface); }
+        .viewport-btn.active { background: var(--builder-surface); color: var(--builder-accent); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 
-        .media-16-9 { aspect-ratio: 16/9; overflow: hidden; border-radius: var(--radius-lg); }
-        .media-fill { width: 100%; height: 100%; object-fit: cover; }
+        .top-bar-right { display: flex; align-items: center; gap: 15px; }
+        .btn-action { background: transparent; border: 1px solid var(--builder-border); color: var(--builder-text); padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { background: var(--builder-surface); }
+        .btn-primary { background: var(--builder-accent); border: none; color: white; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { background: var(--builder-accent-hover); }
 
-        /* Interactive Canvas Indicators */
-        .editable-element { transition: all 0.2s ease; cursor: pointer; position: relative; }
-        .editable-element:hover { outline: 2px dashed #3B82F6; outline-offset: 4px; border-radius: 4px; }
-        .editable-element.selected { outline: 3px solid #3B82F6; outline-offset: 4px; border-radius: 4px; background: rgba(59, 130, 246, 0.05); }
+        /* --- 2. MAIN WORKSPACE --- */
+        .workspace { display: flex; height: calc(100vh - var(--topbar-height)); width: 100vw; }
+
+        /* --- 3. LEFT SIDEBAR (Navigation) --- */
+        .left-sidebar {
+            width: var(--sidebar-width); background-color: var(--builder-bg); border-right: 1px solid var(--builder-border);
+            display: flex; flex-direction: column; overflow-y: auto;
+        }
+        .sidebar-section { padding: 15px 0; border-bottom: 1px solid var(--builder-border); }
+        .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--builder-muted); padding: 0 20px; margin-bottom: 10px; display: block; font-weight: 600; }
+        
+        .nav-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--builder-muted);
+            text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: 0.2s;
+        }
+        .nav-item:hover { color: var(--builder-text); background: var(--builder-surface); }
+        .nav-item.active { color: var(--builder-accent); background: var(--builder-surface); border-right: 3px solid var(--builder-accent); }
+        .nav-item i { width: 16px; text-align: center; }
+
+        /* --- 4. CANVAS AREA --- */
+        .canvas-area {
+            flex-grow: 1; background-color: var(--canvas-bg);
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 40px; overflow: auto; position: relative;
+        }
+        .canvas-container {
+            background: white; width: 100%; max-width: 1440px; min-height: 800px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
+        }
+        /* Viewport Transition Classes */
+        .canvas-container.view-desktop { width: 100%; max-width: 1440px; }
+        .canvas-container.view-tablet { width: 768px; }
+        .canvas-container.view-mobile { width: 375px; }
+
+        /* --- 5. RIGHT INSPECTOR (Context Aware) --- */
+        .right-inspector {
+            width: var(--inspector-width); background-color: var(--builder-bg); border-left: 1px solid var(--builder-border);
+            display: flex; flex-direction: column;
+        }
+        .inspector-header {
+            height: 50px; border-bottom: 1px solid var(--builder-border);
+            display: flex; align-items: center; padding: 0 20px; font-size: 0.85rem; font-weight: 600; color: var(--builder-text);
+        }
+        .inspector-body { padding: 20px; overflow-y: auto; flex-grow: 1; }
+        
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--builder-muted);
+        }
+        .empty-state i { font-size: 2rem; margin-bottom: 15px; opacity: 0.5; }
+        .empty-state p { font-size: 0.85rem; line-height: 1.5; }
 
     </style>
 </head>
 <body>
 
-    <div class="builder-layout">
+    <!-- 1. TOP BAR -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <i class="fa-solid fa-layer-group" style="color: var(--builder-accent); font-size: 1.2rem;"></i>
+            <div class="template-meta">
+                <span class="template-name">AuraEstate Master Template</span>
+                <span class="save-status saved"><i class="fa-solid fa-cloud-check"></i> Autosaved just now</span>
+            </div>
+            <div style="width: 1px; height: 24px; background: var(--builder-border); margin: 0 10px;"></div>
+            <button class="viewport-btn" title="Undo"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="viewport-btn" title="Redo"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+
+        <div class="top-bar-center">
+            <button class="viewport-btn active" data-view="desktop" title="Desktop View (1440px)"><i class="fa-solid fa-desktop"></i></button>
+            <button class="viewport-btn" data-view="tablet" title="Tablet View (768px)"><i class="fa-solid fa-tablet-screen-button"></i></button>
+            <button class="viewport-btn" data-view="mobile" title="Mobile View (375px)"><i class="fa-solid fa-mobile-screen"></i></button>
+        </div>
+
+        <div class="top-bar-right">
+            <span style="font-size: 0.75rem; color: var(--builder-muted); margin-right: 10px;">v1.0.0</span>
+            <button class="btn-action"><i class="fa-solid fa-eye me-2"></i> Preview</button>
+            <button class="btn-action"><i class="fa-solid fa-download me-2"></i> Export</button>
+            <button class="btn-primary"><i class="fa-solid fa-rocket me-2"></i> Publish to Production</button>
+        </div>
+    </header>
+
+    <!-- WORKSPACE -->
+    <div class="workspace">
         
-        <!-- ==========================================
-             LEFT PANEL: THE SAAS BUILDER CONTROLS
-             ========================================== -->
-        <aside class="builder-sidebar">
-            <div class="sidebar-header">
-                <span class="fw-bold"><i class="fa-solid fa-cube me-2 text-primary"></i> CMS Builder</span>
-                <span class="badge bg-primary">V 2.0</span>
+        <!-- 2. LEFT SIDEBAR (Navigation Architecture) -->
+        <aside class="left-sidebar">
+            <div class="sidebar-section">
+                <span class="section-label">Core</span>
+                <a class="nav-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+                <a class="nav-item"><i class="fa-solid fa-file-lines"></i> Pages</a>
+                <a class="nav-item active"><i class="fa-solid fa-cubes"></i> Sections</a>
+                <a class="nav-item"><i class="fa-solid fa-puzzle-piece"></i> Components</a>
             </div>
             
-            <div class="sidebar-content">
-                
-                <!-- 1. Global Theme Settings -->
-                <div class="control-group">
-                    <span class="control-label"><i class="fa-solid fa-palette me-2"></i> Global Theme</span>
-                    
-                    <div class="color-row">
-                        <span style="font-size: 0.85rem;">Primary Brand Color</span>
-                        <input type="color" id="ctrl-color-primary" value="#1A365D">
-                    </div>
-                    
-                    <div class="color-row">
-                        <span style="font-size: 0.85rem;">Accent Color</span>
-                        <input type="color" id="ctrl-color-accent" value="#DD6B20">
-                    </div>
-                    
-                    <span class="control-label mt-3 mb-2"><i class="fa-solid fa-font me-2"></i> Typography</span>
-                    <select id="ctrl-font-heading" class="form-select-saas">
-                        <option value="'Outfit', sans-serif">Outfit (Modern)</option>
-                        <option value="'Playfair Display', serif">Playfair (Classic)</option>
-                        <option value="'Inter', sans-serif">Inter (Clean)</option>
-                    </select>
-                </div>
+            <div class="sidebar-section">
+                <span class="section-label">Design System</span>
+                <a class="nav-item"><i class="fa-solid fa-building"></i> Brand</a>
+                <a class="nav-item"><i class="fa-solid fa-palette"></i> Colors</a>
+                <a class="nav-item"><i class="fa-solid fa-font"></i> Typography</a>
+                <a class="nav-item"><i class="fa-solid fa-table-columns"></i> Layout</a>
+            </div>
 
-                <!-- 2. Content Editor (Activates on Click) -->
-                <div class="control-group" id="editor-panel">
-                    <span class="control-label"><i class="fa-solid fa-pen-to-square me-2"></i> Content Editor</span>
-                    <p id="editor-placeholder" style="font-size: 0.8rem; color: #64748B;">Click any text on the canvas to edit its content here.</p>
-                    
-                    <div id="editor-active" class="d-none">
-                        <span style="font-size: 0.75rem; color: #3B82F6; margin-bottom: 5px; display: block;" id="editor-tag-name">HEADING</span>
-                        <textarea id="ctrl-text-edit" class="form-control-saas" rows="4"></textarea>
-                    </div>
-                </div>
+            <div class="sidebar-section">
+                <span class="section-label">Content & Media</span>
+                <a class="nav-item"><i class="fa-solid fa-pen-nib"></i> Content</a>
+                <a class="nav-item"><i class="fa-solid fa-image"></i> Media Manager</a>
+            </div>
 
-                <!-- 3. Media Manager -->
-                <div class="control-group">
-                    <span class="control-label"><i class="fa-solid fa-image me-2"></i> Media Manager</span>
-                    <span style="font-size: 0.8rem; color: #94A3B8; margin-bottom: 10px; display: block;">Hero Dashboard Image</span>
-                    <input type="file" id="ctrl-image-upload" class="form-control-saas" accept="image/*">
-                    <small style="color: #10B981; font-size: 0.7rem;"><i class="fa-solid fa-shield-halved me-1"></i> Auto-crop active</small>
-                </div>
-
+            <div class="sidebar-section">
+                <span class="section-label">Advanced</span>
+                <a class="nav-item"><i class="fa-solid fa-mobile-screen"></i> Responsive</a>
+                <a class="nav-item"><i class="fa-solid fa-wand-magic-sparkles"></i> Animation</a>
+                <a class="nav-item"><i class="fa-solid fa-code"></i> Embed</a>
+                <a class="nav-item"><i class="fa-solid fa-database"></i> Data / CMS Binding</a>
+            </div>
+            
+            <div class="sidebar-section" style="border: none;">
+                <span class="section-label">Settings</span>
+                <a class="nav-item"><i class="fa-solid fa-magnifying-glass-chart"></i> SEO</a>
+                <a class="nav-item"><i class="fa-solid fa-universal-access"></i> Accessibility</a>
+                <a class="nav-item"><i class="fa-solid fa-gear"></i> Template Settings</a>
             </div>
         </aside>
 
-        <!-- ==========================================
-             RIGHT PANEL: THE CANVAS WORKSPACE
-             ========================================== -->
-        <main class="builder-main">
-            
-            <!-- Top Toolbar -->
-            <header class="builder-topbar">
-                <div class="d-flex align-items-center gap-3">
-                    <span class="fw-bold text-dark">AuraEstate SaaS Template</span>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Saved</span>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-light border"><i class="fa-solid fa-desktop"></i></button>
-                    <button class="btn btn-sm btn-light border"><i class="fa-solid fa-mobile-screen"></i></button>
-                    <button class="btn btn-sm btn-primary px-3 fw-medium ms-2">Publish to Production</button>
-                </div>
-            </header>
-
-            <!-- Canvas Area -->
-            <div class="canvas-wrapper">
-                <div class="canvas-container">
-                    
-                    <!-- THE ACTUAL TEMPLATE -->
-                    <div id="template-root">
-                        
-                        <!-- Nav -->
-                        <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
-                            <h3 class="m-0 editable-element">AuraEstate.</h3>
-                            <a href="#" class="btn-template editable-element">Start Free Trial</a>
-                        </div>
-
-                        <!-- Hero Section -->
-                        <div style="padding: 100px 50px; background-color: #F7FAFC;">
-                            <div class="row align-items-center g-5">
-                                <div class="col-lg-6">
-                                    <span class="badge bg-white text-dark border px-3 py-2 rounded-pill mb-3 fw-medium editable-element">Property Management 2.0</span>
-                                    <h1 style="font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px;" class="editable-element">Automate your real estate portfolio scaling.</h1>
-                                    <p style="font-size: 1.15rem; color: #718096; margin-bottom: 40px;" class="editable-element">Centralize tenant communications, automate rent collection, and analyze property ROI in real-time with our intelligent dashboard.</p>
-                                    <a href="#" class="btn-template editable-element">Book a Demo</a>
-                                </div>
-                                <div class="col-lg-6">
-                                    <!-- Dynamic Image Container -->
-                                    <div class="media-16-9 shadow-lg">
-                                        <img id="canvas-hero-img" src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80" alt="Dashboard" class="media-fill">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Features Section -->
-                        <div style="padding: 100px 50px; background: white;">
-                            <div class="text-center mb-5">
-                                <h2 class="editable-element">Designed for Property Managers</h2>
-                                <p class="text-muted editable-element">Everything you need to run your real estate business efficiently.</p>
-                            </div>
-                            <div class="row g-4">
-                                <div class="col-md-4 text-center p-4 border rounded-3">
-                                    <i class="fa-solid fa-wallet fs-1 mb-3" style="color: var(--brand-accent);"></i>
-                                    <h4 class="editable-element">Automated Billing</h4>
-                                    <p class="text-muted editable-element">Collect rent automatically and issue digital invoices.</p>
-                                </div>
-                                <div class="col-md-4 text-center p-4 border rounded-3">
-                                    <i class="fa-solid fa-users-gear fs-1 mb-3" style="color: var(--brand-accent);"></i>
-                                    <h4 class="editable-element">Tenant Portal</h4>
-                                    <p class="text-muted editable-element">Dedicated portal for maintenance requests.</p>
-                                </div>
-                                <div class="col-md-4 text-center p-4 border rounded-3">
-                                    <i class="fa-solid fa-chart-line fs-1 mb-3" style="color: var(--brand-accent);"></i>
-                                    <h4 class="editable-element">Yield Analytics</h4>
-                                    <p class="text-muted editable-element">Instantly visualize your portfolio's performance.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- END TEMPLATE -->
-
+        <!-- 3. CANVAS AREA -->
+        <main class="canvas-area">
+            <div class="canvas-container view-desktop" id="builder-canvas">
+                <!-- PHASE 2 & 3 CONTENT WILL BE INJECTED HERE -->
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; background: #F8FAFC; color: #94A3B8;">
+                    <i class="fa-solid fa-layer-group mb-3" style="font-size: 3rem; opacity: 0.2;"></i>
+                    <h3 style="font-weight: 500; margin-bottom: 10px; color: #475569;">Canvas Ready</h3>
+                    <p style="font-size: 0.9rem;">Template structure and design tokens will be injected in Phase 2.</p>
                 </div>
             </div>
         </main>
+
+        <!-- 4. RIGHT INSPECTOR (Context-Aware) -->
+        <aside class="right-inspector">
+            <div class="inspector-header" id="inspector-title">
+                Inspector
+            </div>
+            <div class="inspector-body" id="inspector-content">
+                <div class="empty-state">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    <p>Select a section, component, or media on the canvas to configure its properties here.</p>
+                </div>
+            </div>
+        </aside>
+
     </div>
 
-    <!-- ==========================================
-         3. BUILDER LOGIC (JavaScript)
-         ========================================== -->
+    <!-- BUILDER LOGIC (PHASE 1) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const templateRoot = document.getElementById('template-root');
-            let selectedElement = null;
-
-            // 1. Theme Controllers
-            document.getElementById('ctrl-color-primary').addEventListener('input', (e) => {
-                templateRoot.style.setProperty('--brand-primary', e.target.value);
-            });
             
-            document.getElementById('ctrl-color-accent').addEventListener('input', (e) => {
-                templateRoot.style.setProperty('--brand-accent', e.target.value);
-            });
+            // Viewport Switcher Logic (Desktop/Tablet/Mobile)
+            const viewportBtns = document.querySelectorAll('.viewport-btn[data-view]');
+            const canvasContainer = document.getElementById('builder-canvas');
 
-            document.getElementById('ctrl-font-heading').addEventListener('change', (e) => {
-                templateRoot.style.setProperty('--font-heading', e.target.value);
-            });
-
-            // 2. Real Image Upload Engine (FileReader)
-            document.getElementById('ctrl-image-upload').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        // Change the image source directly to the local uploaded file
-                        document.getElementById('canvas-hero-img').src = event.target.result;
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // 3. Canvas Text Editor Logic
-            const editableElements = document.querySelectorAll('.editable-element');
-            const editorActivePanel = document.getElementById('editor-active');
-            const editorPlaceholder = document.getElementById('editor-placeholder');
-            const textInput = document.getElementById('ctrl-text-edit');
-            const tagLabel = document.getElementById('editor-tag-name');
-
-            editableElements.forEach(el => {
-                el.addEventListener('click', function(e) {
-                    e.preventDefault();
+            viewportBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active state from all buttons
+                    viewportBtns.forEach(b => b.classList.remove('active'));
+                    // Add active state to clicked button
+                    this.classList.add('active');
                     
-                    // Remove selected class from all
-                    editableElements.forEach(item => item.classList.remove('selected'));
-                    
-                    // Add selected class to clicked element
-                    this.classList.add('selected');
-                    selectedElement = this;
-
-                    // Update Sidebar UI
-                    editorPlaceholder.classList.add('d-none');
-                    editorActivePanel.classList.remove('d-none');
-                    
-                    tagLabel.textContent = `EDITING: ${this.tagName}`;
-                    textInput.value = this.innerText;
-                    textInput.focus();
+                    // Update Canvas Class
+                    const viewType = this.getAttribute('data-view');
+                    canvasContainer.className = `canvas-container view-${viewType}`;
                 });
             });
 
-            // Sync sidebar text input back to canvas
-            textInput.addEventListener('input', function() {
-                if (selectedElement) {
-                    selectedElement.innerText = this.value;
-                }
+            // Sidebar Menu Logic
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(n => n.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update Inspector title based on selected menu (Simulation for Phase 1)
+                    document.getElementById('inspector-title').innerText = this.innerText + ' Configuration';
+                });
             });
         });
     </script>
