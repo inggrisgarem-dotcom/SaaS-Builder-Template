@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise SaaS Builder | Phase 2</title>
+    <title>Enterprise SaaS Builder | Phase 3</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,11 +12,12 @@
 
     <style>
         /* ========================================================
-           BUILDER UI SHELL (Protected CSS)
+           1. BUILDER UI SHELL
            ======================================================== */
         :root {
             --builder-bg: #0F172A; --builder-surface: #1E293B; --builder-border: #334155;
             --builder-text: #F8FAFC; --builder-muted: #94A3B8; --builder-accent: #3B82F6;
+            --builder-success: #10B981;
             --topbar-height: 64px; --sidebar-width: 260px; --inspector-width: 300px;
         }
 
@@ -30,13 +31,12 @@
         .viewport-btn.active { background: var(--builder-surface); color: var(--builder-accent); box-shadow: inset 0 0 0 1px var(--builder-border); }
         .btn-primary { background: var(--builder-accent); border: none; color: white; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
 
-        /* Workspace Layout */
+        /* Workspace & Sidebar */
         .workspace { display: flex; height: calc(100vh - var(--topbar-height)); width: 100vw; }
-        
-        /* Left Sidebar */
         .left-sidebar { width: var(--sidebar-width); background: var(--builder-bg); border-right: 1px solid var(--builder-border); overflow-y: auto; }
         .section-label { font-size: 0.7rem; text-transform: uppercase; color: var(--builder-muted); padding: 15px 20px 5px; display: block; font-weight: 600; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--builder-muted); font-size: 0.85rem; cursor: pointer; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: var(--builder-muted); font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+        .nav-item:hover { background: var(--builder-surface); color: var(--builder-text); }
         .nav-item.active { color: var(--builder-accent); background: var(--builder-surface); border-right: 3px solid var(--builder-accent); }
         
         /* Canvas */
@@ -45,37 +45,41 @@
         .canvas-container.view-tablet { width: 768px; }
         .canvas-container.view-mobile { width: 375px; }
 
-        /* Right Inspector */
+        /* Right Inspector & Controls */
         .right-inspector { width: var(--inspector-width); background: var(--builder-bg); border-left: 1px solid var(--builder-border); display: flex; flex-direction: column; }
         .inspector-header { height: 50px; border-bottom: 1px solid var(--builder-border); display: flex; align-items: center; padding: 0 20px; font-size: 0.85rem; font-weight: 600; }
         .inspector-body { padding: 20px; overflow-y: auto; flex-grow: 1; }
-
-        /* Builder Controls */
-        .control-group { margin-bottom: 20px; }
-        .control-label { display: block; font-size: 0.75rem; color: var(--builder-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .control-group { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--builder-border); }
+        .control-label { display: block; font-size: 0.75rem; color: var(--builder-muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 600; }
         .form-control-saas { background: #0F172A; border: 1px solid var(--builder-border); color: white; border-radius: 6px; padding: 8px 12px; width: 100%; font-size: 0.85rem; }
         .color-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.85rem; }
-        .color-row input[type="color"] { background: none; border: none; width: 30px; height: 30px; cursor: pointer; padding: 0; }
+        .color-row input[type="color"] { background: none; border: none; width: 30px; height: 30px; cursor: pointer; }
         .range-row { display: flex; flex-direction: column; margin-bottom: 15px; }
         .range-row label { font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 5px; }
         input[type="range"] { accent-color: var(--builder-accent); }
 
+        /* SaaS Toggle Switch */
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.85rem; }
+        .saas-toggle { position: relative; width: 36px; height: 20px; appearance: none; background: var(--builder-border); border-radius: 20px; cursor: pointer; transition: 0.3s; outline: none; }
+        .saas-toggle:checked { background: var(--builder-success); }
+        .saas-toggle::before { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; top: 2px; left: 2px; background: #fff; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .saas-toggle:checked::before { transform: translateX(16px); }
+
         /* ========================================================
-           TEMPLATE CANVAS (Design Tokens bound to CSS Variables)
+           2. TEMPLATE CANVAS (Design Tokens & Modular Layout)
            ======================================================== */
         #template-root {
-            /* Phase 2: Design Tokens */
+            /* Design Tokens */
             --color-primary: #1A365D;
             --color-accent: #DD6B20;
             --color-bg: #F8FAFC;
             --color-surface: #FFFFFF;
             --color-text: #2D3748;
-            
             --font-heading: 'Outfit', sans-serif;
             --font-body: 'Inter', sans-serif;
-            
             --container-width: 1200px;
-            --spacing-y: 100px;
+            --spacing-y: 80px;
             --radius: 12px;
 
             background-color: var(--color-bg);
@@ -83,22 +87,31 @@
             font-family: var(--font-body);
             min-height: 100%;
             transition: all 0.3s ease;
+            line-height: 1.6;
         }
         
         .t-container { max-width: var(--container-width); margin: 0 auto; padding: 0 20px; transition: max-width 0.3s ease; }
-        .t-heading { font-family: var(--font-heading); color: var(--color-primary); font-weight: 700; transition: color 0.3s, font-family 0.3s; }
-        .t-btn { background: var(--color-accent); color: #fff; padding: 12px 28px; border-radius: var(--radius); text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s; }
+        .t-heading { font-family: var(--font-heading); color: var(--color-primary); font-weight: 700; transition: color 0.3s, font-family 0.3s; margin-bottom: 1rem; }
+        .t-btn { background: var(--color-accent); color: #fff; padding: 12px 28px; border-radius: var(--radius); text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s; border: none; cursor: pointer; }
         .t-surface { background: var(--color-surface); transition: background 0.3s; }
+        
+        /* Component System */
+        .t-section { padding: var(--spacing-y) 0; transition: padding 0.3s; }
+        .t-grid { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .t-card { background: var(--color-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.3s; }
+        .t-card:hover { transform: translateY(-5px); }
+        .t-media-16-9 { aspect-ratio: 16/9; overflow: hidden; }
+        .t-media-4-3 { aspect-ratio: 4/3; overflow: hidden; }
+        .t-media-fill { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
-    <!-- TOP BAR -->
     <header class="top-bar">
         <div style="display: flex; align-items: center; gap: 15px;">
             <i class="fa-solid fa-layer-group" style="color: var(--builder-accent); font-size: 1.2rem;"></i>
             <span style="font-size: 0.9rem; font-weight: 600;">AuraEstate Master Template</span>
-            <span style="font-size: 0.7rem; color: #10B981;"><i class="fa-solid fa-cloud-check"></i> Saved</span>
+            <span style="font-size: 0.7rem; color: var(--builder-success);"><i class="fa-solid fa-cloud-check"></i> Saved</span>
         </div>
         <div style="display: flex; gap: 5px;">
             <button class="viewport-btn active" data-view="desktop"><i class="fa-solid fa-desktop"></i></button>
@@ -108,19 +121,17 @@
         <button class="btn-primary">Publish to Production</button>
     </header>
 
-    <!-- WORKSPACE -->
     <div class="workspace">
-        
         <!-- LEFT SIDEBAR -->
         <aside class="left-sidebar">
             <span class="section-label">Design System</span>
-            <!-- These data-target attributes will open the specific panel in the right inspector -->
-            <div class="nav-item active" data-target="panel-colors"><i class="fa-solid fa-palette"></i> Colors</div>
+            <div class="nav-item" data-target="panel-colors"><i class="fa-solid fa-palette"></i> Colors</div>
             <div class="nav-item" data-target="panel-typography"><i class="fa-solid fa-font"></i> Typography</div>
             <div class="nav-item" data-target="panel-layout"><i class="fa-solid fa-table-columns"></i> Layout Bounds</div>
             
-            <span class="section-label mt-3">Content Management</span>
-            <div class="nav-item" data-target="panel-empty"><i class="fa-solid fa-cubes"></i> Sections (Phase 3)</div>
+            <span class="section-label mt-3">Content & Sections</span>
+            <div class="nav-item active" data-target="panel-sections"><i class="fa-solid fa-cubes"></i> Sections Manager</div>
+            <div class="nav-item" data-target="panel-empty"><i class="fa-solid fa-pen-nib"></i> Content (Phase 4)</div>
             <div class="nav-item" data-target="panel-empty"><i class="fa-solid fa-image"></i> Media (Phase 4)</div>
         </aside>
 
@@ -128,82 +139,162 @@
         <main class="canvas-area">
             <div class="canvas-container view-desktop" id="builder-canvas">
                 
-                <!-- THE TEMPLATE (Consuming Design Tokens) -->
+                <!-- THE TEMPLATE -->
                 <div id="template-root">
-                    <!-- Navigation Section -->
-                    <div class="t-surface" style="padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    
+                    <!-- Section: Navbar -->
+                    <nav id="sec-navbar" class="t-surface" style="padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
                         <div class="t-container" style="display: flex; justify-content: space-between; align-items: center;">
                             <h2 class="t-heading" style="margin: 0; font-size: 1.5rem;">AuraEstate.</h2>
                             <a href="#" class="t-btn">Get Started</a>
                         </div>
-                    </div>
+                    </nav>
 
-                    <!-- Hero Section -->
-                    <div style="padding: var(--spacing-y) 0;">
+                    <!-- Section: Hero -->
+                    <section id="sec-hero" class="t-section">
                         <div class="t-container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                            <span style="background: var(--color-surface); color: var(--color-primary); padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">Property Management 2.0</span>
-                            <h1 class="t-heading" style="font-size: 4rem; line-height: 1.1; margin-bottom: 20px; max-width: 800px;">Scale Your Property Portfolio Faster.</h1>
-                            <p style="font-size: 1.25rem; margin-bottom: 40px; max-width: 600px; opacity: 0.8;">Centralize operations, automate rent collection, and increase tenant satisfaction with one powerful ecosystem.</p>
-                            
-                            <!-- Media Slot with dynamic Border Radius -->
-                            <div style="width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: var(--radius); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
-                                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                            <h1 class="t-heading" style="font-size: 3.5rem; line-height: 1.1; max-width: 800px;">Scale Your Property Portfolio Faster.</h1>
+                            <p style="font-size: 1.15rem; margin-bottom: 40px; max-width: 600px; opacity: 0.8;">Centralize operations, automate rent collection, and increase tenant satisfaction.</p>
+                            <div class="t-media-16-9" style="width: 100%; border-radius: var(--radius); box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80" class="t-media-fill">
                             </div>
                         </div>
-                    </div>
+                    </section>
+
+                    <!-- Section: Features (PHASE 3 INJECTION) -->
+                    <section id="sec-features" class="t-section" style="background: var(--color-surface);">
+                        <div class="t-container">
+                            <div style="text-align: center; margin-bottom: 50px;">
+                                <h2 class="t-heading" style="font-size: 2.5rem;">Designed for Managers</h2>
+                                <p style="opacity: 0.8;">Everything you need to run your real estate business efficiently.</p>
+                            </div>
+                            <div class="t-grid">
+                                <div class="t-card" style="padding: 30px; text-align: center;">
+                                    <i class="fa-solid fa-wallet" style="font-size: 2.5rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading" style="font-size: 1.25rem;">Automated Billing</h3>
+                                    <p style="font-size: 0.9rem; opacity: 0.8;">Collect rent automatically and issue digital invoices.</p>
+                                </div>
+                                <div class="t-card" style="padding: 30px; text-align: center;">
+                                    <i class="fa-solid fa-users-gear" style="font-size: 2.5rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading" style="font-size: 1.25rem;">Tenant Portal</h3>
+                                    <p style="font-size: 0.9rem; opacity: 0.8;">Dedicated portal for maintenance requests and messages.</p>
+                                </div>
+                                <div class="t-card" style="padding: 30px; text-align: center;">
+                                    <i class="fa-solid fa-chart-line" style="font-size: 2.5rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading" style="font-size: 1.25rem;">Yield Analytics</h3>
+                                    <p style="font-size: 0.9rem; opacity: 0.8;">Instantly visualize your portfolio's performance.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section: Properties (PHASE 3 INJECTION) -->
+                    <section id="sec-properties" class="t-section">
+                        <div class="t-container">
+                            <h2 class="t-heading" style="font-size: 2.5rem; margin-bottom: 40px;">Active Listings</h2>
+                            <div class="t-grid">
+                                <!-- Card 1 -->
+                                <div class="t-card">
+                                    <div class="t-media-4-3"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80" class="t-media-fill"></div>
+                                    <div style="padding: 20px;">
+                                        <p style="color: var(--color-accent); font-weight: 700; margin-bottom: 5px; font-size: 1.25rem;">$2,450,000</p>
+                                        <h3 class="t-heading" style="font-size: 1.1rem; margin-bottom: 10px;">Beverly Hills Villa</h3>
+                                        <div style="display: flex; gap: 15px; font-size: 0.85rem; opacity: 0.7;">
+                                            <span><i class="fa-solid fa-bed me-1"></i> 5 Beds</span>
+                                            <span><i class="fa-solid fa-bath me-1"></i> 4 Baths</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card 2 -->
+                                <div class="t-card">
+                                    <div class="t-media-4-3"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80" class="t-media-fill"></div>
+                                    <div style="padding: 20px;">
+                                        <p style="color: var(--color-accent); font-weight: 700; margin-bottom: 5px; font-size: 1.25rem;">$850,000</p>
+                                        <h3 class="t-heading" style="font-size: 1.1rem; margin-bottom: 10px;">Downtown Penthouse</h3>
+                                        <div style="display: flex; gap: 15px; font-size: 0.85rem; opacity: 0.7;">
+                                            <span><i class="fa-solid fa-bed me-1"></i> 2 Beds</span>
+                                            <span><i class="fa-solid fa-bath me-1"></i> 2 Baths</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section: Footer (PHASE 3 INJECTION) -->
+                    <footer id="sec-footer" class="t-surface" style="padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.05); text-align: center;">
+                        <div class="t-container">
+                            <h3 class="t-heading" style="font-size: 1.5rem; margin-bottom: 10px;">AuraEstate.</h3>
+                            <p style="font-size: 0.85rem; opacity: 0.6;">© 2026 SaaS Template Builder. All rights reserved.</p>
+                        </div>
+                    </footer>
+
                 </div>
+                <!-- END TEMPLATE -->
 
             </div>
         </main>
 
-        <!-- RIGHT INSPECTOR (Dynamic Panels) -->
+        <!-- RIGHT INSPECTOR -->
         <aside class="right-inspector">
-            <div class="inspector-header" id="inspector-title">Colors Settings</div>
-            
+            <div class="inspector-header" id="inspector-title">Sections Manager</div>
             <div class="inspector-body">
                 
-                <!-- 1. COLORS PANEL -->
-                <div id="panel-colors" class="inspector-panel">
+                <!-- PANEL: SECTIONS MANAGER (NEW) -->
+                <div id="panel-sections" class="inspector-panel">
                     <div class="control-group">
-                        <span class="control-label">Brand Identity</span>
-                        <div class="color-row">
-                            <span>Primary Color</span>
-                            <input type="color" id="inp-color-primary" value="#1A365D">
+                        <span class="control-label">Page Structure</span>
+                        <p style="font-size: 0.75rem; color: var(--builder-muted); margin-bottom: 20px;">Toggle sections to show or hide them in the layout.</p>
+                        
+                        <div class="toggle-row">
+                            <span><i class="fa-solid fa-bars me-2" style="opacity:0.5; width:20px;"></i> Navigation Bar</span>
+                            <input type="checkbox" class="saas-toggle" data-section="sec-navbar" checked>
                         </div>
-                        <div class="color-row">
-                            <span>Accent (Buttons)</span>
-                            <input type="color" id="inp-color-accent" value="#DD6B20">
+                        <div class="toggle-row">
+                            <span><i class="fa-solid fa-image me-2" style="opacity:0.5; width:20px;"></i> Hero Header</span>
+                            <input type="checkbox" class="saas-toggle" data-section="sec-hero" checked>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        <span class="control-label">Interface Colors</span>
-                        <div class="color-row">
-                            <span>Background Base</span>
-                            <input type="color" id="inp-color-bg" value="#F8FAFC">
+                        <div class="toggle-row">
+                            <span><i class="fa-solid fa-table-cells-large me-2" style="opacity:0.5; width:20px;"></i> SaaS Features Grid</span>
+                            <input type="checkbox" class="saas-toggle" data-section="sec-features" checked>
                         </div>
-                        <div class="color-row">
-                            <span>Surface (Cards/Nav)</span>
-                            <input type="color" id="inp-color-surface" value="#FFFFFF">
+                        <div class="toggle-row">
+                            <span><i class="fa-solid fa-house me-2" style="opacity:0.5; width:20px;"></i> Property Listings</span>
+                            <input type="checkbox" class="saas-toggle" data-section="sec-properties" checked>
                         </div>
-                        <div class="color-row">
-                            <span>Text Primary</span>
-                            <input type="color" id="inp-color-text" value="#2D3748">
+                        <div class="toggle-row">
+                            <span><i class="fa-solid fa-shoe-prints me-2" style="opacity:0.5; width:20px;"></i> Footer</span>
+                            <input type="checkbox" class="saas-toggle" data-section="sec-footer" checked>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. TYPOGRAPHY PANEL -->
+                <!-- PANEL: COLORS -->
+                <div id="panel-colors" class="inspector-panel d-none">
+                    <div class="control-group">
+                        <span class="control-label">Brand Identity</span>
+                        <div class="color-row"><span>Primary Color</span> <input type="color" id="inp-color-primary" value="#1A365D"></div>
+                        <div class="color-row"><span>Accent Color</span> <input type="color" id="inp-color-accent" value="#DD6B20"></div>
+                    </div>
+                    <div class="control-group">
+                        <span class="control-label">Interface Colors</span>
+                        <div class="color-row"><span>Background Base</span> <input type="color" id="inp-color-bg" value="#F8FAFC"></div>
+                        <div class="color-row"><span>Surface</span> <input type="color" id="inp-color-surface" value="#FFFFFF"></div>
+                        <div class="color-row"><span>Text Primary</span> <input type="color" id="inp-color-text" value="#2D3748"></div>
+                    </div>
+                </div>
+
+                <!-- PANEL: TYPOGRAPHY -->
                 <div id="panel-typography" class="inspector-panel d-none">
                     <div class="control-group">
                         <span class="control-label">Font Pairings</span>
-                        <label style="font-size: 0.8rem; color: #fff; margin-bottom: 5px; display: block;">Heading Font</label>
+                        <label style="font-size: 0.8rem; margin-bottom: 5px; display: block;">Heading Font</label>
                         <select id="inp-font-heading" class="form-control-saas" style="margin-bottom: 15px;">
                             <option value="'Outfit', sans-serif">Outfit (Modern)</option>
                             <option value="'Playfair Display', serif">Playfair (Elegant)</option>
                             <option value="'Inter', sans-serif">Inter (Clean)</option>
                         </select>
-
-                        <label style="font-size: 0.8rem; color: #fff; margin-bottom: 5px; display: block;">Body Font</label>
+                        <label style="font-size: 0.8rem; margin-bottom: 5px; display: block;">Body Font</label>
                         <select id="inp-font-body" class="form-control-saas">
                             <option value="'Inter', sans-serif">Inter</option>
                             <option value="'Roboto', sans-serif">Roboto</option>
@@ -211,29 +302,17 @@
                     </div>
                 </div>
 
-                <!-- 3. LAYOUT PANEL -->
+                <!-- PANEL: LAYOUT -->
                 <div id="panel-layout" class="inspector-panel d-none">
                     <div class="control-group">
                         <span class="control-label">Global Structure</span>
-                        
-                        <div class="range-row">
-                            <label><span>Container Max Width</span> <span id="val-container">1200px</span></label>
-                            <input type="range" id="inp-container" min="800" max="1440" value="1200" step="10">
-                        </div>
-                        
-                        <div class="range-row">
-                            <label><span>Section Spacing (Y)</span> <span id="val-spacing">100px</span></label>
-                            <input type="range" id="inp-spacing" min="40" max="150" value="100" step="5">
-                        </div>
-
-                        <div class="range-row">
-                            <label><span>Border Radius Base</span> <span id="val-radius">12px</span></label>
-                            <input type="range" id="inp-radius" min="0" max="30" value="12" step="1">
-                        </div>
+                        <div class="range-row"><label><span>Container Width</span> <span id="val-container">1200px</span></label><input type="range" id="inp-container" min="800" max="1440" value="1200" step="10"></div>
+                        <div class="range-row"><label><span>Section Spacing</span> <span id="val-spacing">80px</span></label><input type="range" id="inp-spacing" min="40" max="150" value="80" step="5"></div>
+                        <div class="range-row"><label><span>Border Radius</span> <span id="val-radius">12px</span></label><input type="range" id="inp-radius" min="0" max="30" value="12" step="1"></div>
                     </div>
                 </div>
 
-                <!-- EMPTY STATE (For locked phases) -->
+                <!-- EMPTY STATE -->
                 <div id="panel-empty" class="inspector-panel d-none">
                     <div style="text-align: center; color: var(--builder-muted); padding-top: 40px;">
                         <i class="fa-solid fa-lock" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i>
@@ -249,10 +328,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- VIEWPORT SWITCHER (Fixed logic applied here as well) ---
+            // Viewport Switcher
             const viewportBtns = document.querySelectorAll('.viewport-btn');
             const canvasContainer = document.getElementById('builder-canvas');
-
             viewportBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     viewportBtns.forEach(b => b.classList.remove('active'));
@@ -261,35 +339,45 @@
                 });
             });
 
-            // --- NAVIGATION CONTROLLER (Left Sidebar -> Right Inspector) ---
+            // Navigation Controller
             const navItems = document.querySelectorAll('.nav-item');
             const panels = document.querySelectorAll('.inspector-panel');
             const inspectorTitle = document.getElementById('inspector-title');
 
             navItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    // Update active menu
                     navItems.forEach(n => n.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Switch Inspector Panel
                     const targetId = this.getAttribute('data-target');
                     panels.forEach(p => p.classList.add('d-none'));
                     document.getElementById(targetId).classList.remove('d-none');
-                    
-                    // Update Title
-                    inspectorTitle.innerText = this.innerText + ' Settings';
+                    inspectorTitle.innerText = this.innerText;
                 });
             });
 
-            // --- DESIGN SYSTEM BINDING (Real-time Template Update) ---
+            // --- SECTION MANAGER (PHASE 3 LOGIC) ---
+            const sectionToggles = document.querySelectorAll('.saas-toggle');
+            sectionToggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    const sectionEl = document.getElementById(sectionId);
+                    if(sectionEl) {
+                        // Smoothly hide/show
+                        if(this.checked) {
+                            sectionEl.style.display = 'block';
+                        } else {
+                            sectionEl.style.display = 'none';
+                        }
+                    }
+                });
+            });
+
+            // Design System Variables (Phase 2 retained)
             const root = document.getElementById('template-root');
-            
-            // Helper function to bind inputs to CSS Variables
             const bindCSSVar = (inputId, cssVar, labelId = null, suffix = '') => {
                 const input = document.getElementById(inputId);
                 const label = labelId ? document.getElementById(labelId) : null;
-                
                 if(input) {
                     input.addEventListener('input', (e) => {
                         const val = e.target.value;
@@ -299,18 +387,13 @@
                 }
             };
 
-            // Colors
             bindCSSVar('inp-color-primary', '--color-primary');
             bindCSSVar('inp-color-accent', '--color-accent');
             bindCSSVar('inp-color-bg', '--color-bg');
             bindCSSVar('inp-color-surface', '--color-surface');
             bindCSSVar('inp-color-text', '--color-text');
-
-            // Typography
             bindCSSVar('inp-font-heading', '--font-heading');
             bindCSSVar('inp-font-body', '--font-body');
-
-            // Layout Bound Constraints
             bindCSSVar('inp-container', '--container-width', 'val-container', 'px');
             bindCSSVar('inp-spacing', '--spacing-y', 'val-spacing', 'px');
             bindCSSVar('inp-radius', '--radius', 'val-radius', 'px');
