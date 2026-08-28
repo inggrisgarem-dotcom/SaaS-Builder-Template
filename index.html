@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise SaaS Builder | Phase 4</title>
+    <title>Enterprise SaaS Builder | Production Ready</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,12 +12,12 @@
 
     <style>
         /* ========================================================
-           1. BUILDER UI SHELL & VARIABLES
+           1. BUILDER UI SHELL (Enterprise Standard)
            ======================================================== */
         :root {
             --builder-bg: #0F172A; --builder-surface: #1E293B; --builder-border: #334155;
             --builder-text: #F8FAFC; --builder-muted: #94A3B8; --builder-accent: #3B82F6;
-            --builder-success: #10B981;
+            --builder-success: #10B981; --builder-warning: #F59E0B;
             --topbar-height: 64px; --sidebar-width: 260px; --inspector-width: 320px;
         }
 
@@ -29,7 +29,8 @@
         .top-bar { height: var(--topbar-height); background: var(--builder-surface); border-bottom: 1px solid var(--builder-border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; }
         .viewport-btn { background: transparent; border: none; color: var(--builder-muted); width: 36px; height: 36px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .viewport-btn.active { background: var(--builder-surface); color: var(--builder-accent); box-shadow: inset 0 0 0 1px var(--builder-border); }
-        .btn-primary { background: var(--builder-accent); border: none; color: white; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: var(--builder-accent); border: none; color: white; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { background: #2563EB; }
 
         /* Workspace & Sidebar */
         .workspace { display: flex; height: calc(100vh - var(--topbar-height)); width: 100vw; }
@@ -40,36 +41,44 @@
         .nav-item.active { color: var(--builder-accent); background: var(--builder-surface); border-right: 3px solid var(--builder-accent); }
         
         /* Canvas */
-        .canvas-area { flex-grow: 1; background: #E2E8F0; display: flex; justify-content: center; align-items: flex-start; padding: 40px; overflow: auto; }
+        .canvas-area { flex-grow: 1; background: #E2E8F0; display: flex; justify-content: center; align-items: flex-start; padding: 40px; overflow: auto; position: relative; }
         .canvas-container { background: white; width: 1440px; min-height: 800px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 8px; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; }
         .canvas-container.view-tablet { width: 768px; }
         .canvas-container.view-mobile { width: 375px; }
 
-        /* Right Inspector & Controls */
+        /* Right Inspector */
         .right-inspector { width: var(--inspector-width); background: var(--builder-bg); border-left: 1px solid var(--builder-border); display: flex; flex-direction: column; }
         .inspector-header { height: 50px; border-bottom: 1px solid var(--builder-border); display: flex; align-items: center; padding: 0 20px; font-size: 0.85rem; font-weight: 600; }
         .inspector-body { padding: 20px; overflow-y: auto; flex-grow: 1; }
         
+        /* Controls */
         .control-group { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--builder-border); }
         .control-label { display: block; font-size: 0.75rem; color: var(--builder-muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 600; }
-        .form-control-saas { background: #0F172A; border: 1px solid var(--builder-border); color: white; border-radius: 6px; padding: 10px 12px; width: 100%; font-size: 0.85rem; }
+        .form-control-saas { background: #0F172A; border: 1px solid var(--builder-border); color: white; border-radius: 6px; padding: 10px 12px; width: 100%; font-size: 0.85rem; margin-bottom: 10px; }
         .form-control-saas:focus { outline: none; border-color: var(--builder-accent); }
-        
         .color-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.85rem; }
         .color-row input[type="color"] { background: none; border: none; width: 30px; height: 30px; cursor: pointer; }
         .range-row { display: flex; flex-direction: column; margin-bottom: 15px; }
         .range-row label { font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 5px; }
         input[type="range"] { accent-color: var(--builder-accent); }
-
-        /* SaaS Toggle Switch */
+        
+        /* Toggle */
         .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.85rem; }
         .saas-toggle { position: relative; width: 36px; height: 20px; appearance: none; background: var(--builder-border); border-radius: 20px; cursor: pointer; transition: 0.3s; outline: none; }
         .saas-toggle:checked { background: var(--builder-success); }
         .saas-toggle::before { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; top: 2px; left: 2px; background: #fff; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         .saas-toggle:checked::before { transform: translateX(16px); }
 
+        /* Modal Publish */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.9); z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--builder-surface); border: 1px solid var(--builder-border); width: 800px; max-width: 90%; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--builder-border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 20px; overflow-y: auto; max-height: 60vh; }
+        pre { background: #0F172A; padding: 15px; border-radius: 8px; color: #38BDF8; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; border: 1px solid var(--builder-border); }
+
         /* ========================================================
-           2. TEMPLATE CANVAS & EDITABLE INDICATORS
+           2. TEMPLATE CANVAS (Strictly Scoped)
            ======================================================== */
         #template-root {
             --color-primary: #1A365D; --color-accent: #DD6B20; --color-bg: #F8FAFC;
@@ -83,60 +92,66 @@
         
         .t-container { max-width: var(--container-width); margin: 0 auto; padding: 0 20px; transition: max-width 0.3s ease; }
         .t-heading { font-family: var(--font-heading); color: var(--color-primary); font-weight: 700; margin-bottom: 1rem; }
-        .t-btn { background: var(--color-accent); color: #fff; padding: 12px 28px; border-radius: var(--radius); text-decoration: none; font-weight: 600; display: inline-block; border: none; cursor: pointer; }
+        .t-btn { background: var(--color-accent); color: #fff; padding: 12px 28px; border-radius: var(--radius); text-decoration: none; font-weight: 600; display: inline-block; border: none; cursor: pointer; transition: 0.2s; }
         .t-surface { background: var(--color-surface); }
         .t-section { padding: var(--spacing-y) 0; }
         .t-grid { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
         .t-card { background: var(--color-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); }
-        
         .t-media-16-9 { aspect-ratio: 16/9; overflow: hidden; }
-        .t-media-4-3 { aspect-ratio: 4/3; overflow: hidden; }
         .t-media-fill { width: 100%; height: 100%; object-fit: cover; }
 
-        /* INTERACTIVE EDITABLE CSS */
+        /* Interactive Editable Indicators */
         .editable-element { cursor: pointer; position: relative; transition: all 0.2s; border-radius: 4px; }
         .editable-element:hover { outline: 2px dashed var(--builder-accent); outline-offset: 4px; }
-        .editable-element.selected-element { outline: 3px solid var(--builder-accent); outline-offset: 4px; z-index: 10; }
-        img.editable-element:hover { opacity: 0.8; }
+        .editable-element.selected-element { outline: 3px solid var(--builder-accent); outline-offset: 4px; z-index: 10; background: rgba(59, 130, 246, 0.05); }
     </style>
 </head>
 <body>
 
+    <!-- TOP BAR -->
     <header class="top-bar">
         <div style="display: flex; align-items: center; gap: 15px;">
             <i class="fa-solid fa-layer-group" style="color: var(--builder-accent); font-size: 1.2rem;"></i>
             <span style="font-size: 0.9rem; font-weight: 600;">AuraEstate Master Template</span>
-            <span style="font-size: 0.7rem; color: var(--builder-success);"><i class="fa-solid fa-cloud-check"></i> Saved</span>
+            <span style="font-size: 0.7rem; color: var(--builder-success);"><i class="fa-solid fa-cloud-check"></i> Connected</span>
         </div>
         <div style="display: flex; gap: 5px;">
             <button class="viewport-btn active" data-view="desktop"><i class="fa-solid fa-desktop"></i></button>
             <button class="viewport-btn" data-view="tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
             <button class="viewport-btn" data-view="mobile"><i class="fa-solid fa-mobile-screen"></i></button>
         </div>
-        <button class="btn-primary">Publish to Production</button>
+        <button class="btn-primary" id="btn-publish"><i class="fa-solid fa-rocket me-2"></i> Publish to Production</button>
     </header>
 
     <div class="workspace">
-        <!-- LEFT SIDEBAR -->
+        
+        <!-- LEFT SIDEBAR (Unified Navigation) -->
         <aside class="left-sidebar">
             <span class="section-label">Design System</span>
-            <div class="nav-item" data-target="panel-colors"><i class="fa-solid fa-palette"></i> Colors</div>
-            <div class="nav-item" data-target="panel-typography"><i class="fa-solid fa-font"></i> Typography</div>
-            <div class="nav-item" data-target="panel-layout"><i class="fa-solid fa-table-columns"></i> Layout Bounds</div>
+            <div class="nav-item active" data-target="panel-colors" id="nav-colors"><i class="fa-solid fa-palette"></i> Colors</div>
+            <div class="nav-item" data-target="panel-typography" id="nav-typography"><i class="fa-solid fa-font"></i> Typography</div>
+            <div class="nav-item" data-target="panel-layout" id="nav-layout"><i class="fa-solid fa-table-columns"></i> Layout Bounds</div>
             
-            <span class="section-label mt-3">Content & Sections</span>
-            <div class="nav-item" data-target="panel-sections"><i class="fa-solid fa-cubes"></i> Sections Manager</div>
-            <div class="nav-item active" data-target="panel-content" id="nav-content"><i class="fa-solid fa-pen-nib"></i> Content Editor</div>
+            <span class="section-label mt-3">Structure</span>
+            <div class="nav-item" data-target="panel-sections" id="nav-sections"><i class="fa-solid fa-cubes"></i> Sections Manager</div>
+            
+            <span class="section-label mt-3">Content</span>
+            <div class="nav-item" data-target="panel-content" id="nav-content"><i class="fa-solid fa-pen-nib"></i> Content Editor</div>
             <div class="nav-item" data-target="panel-media" id="nav-media"><i class="fa-solid fa-image"></i> Media Manager</div>
+            
+            <span class="section-label mt-3">Advanced (Pro)</span>
+            <div class="nav-item" data-target="panel-comingsoon"><i class="fa-solid fa-wand-magic-sparkles"></i> Animations</div>
+            <div class="nav-item" data-target="panel-comingsoon"><i class="fa-solid fa-database"></i> CMS Binding</div>
         </aside>
 
         <!-- CANVAS AREA -->
         <main class="canvas-area">
             <div class="canvas-container view-desktop" id="builder-canvas">
                 
-                <!-- THE TEMPLATE (With data-editable attributes) -->
+                <!-- THE TEMPLATE -->
                 <div id="template-root">
                     
+                    <!-- Section: Navbar -->
                     <nav id="sec-navbar" class="t-surface" style="padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
                         <div class="t-container" style="display: flex; justify-content: space-between; align-items: center;">
                             <h2 class="t-heading editable-element" data-editable="text" style="margin: 0; font-size: 1.5rem;">AuraEstate.</h2>
@@ -144,17 +159,20 @@
                         </div>
                     </nav>
 
+                    <!-- Section: Hero -->
                     <section id="sec-hero" class="t-section">
                         <div class="t-container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                            <span class="editable-element" data-editable="text" style="background: var(--color-surface); color: var(--color-primary); padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">Property Management 2.0</span>
                             <h1 class="t-heading editable-element" data-editable="text" style="font-size: 3.5rem; line-height: 1.1; max-width: 800px;">Scale Your Property Portfolio Faster.</h1>
-                            <p class="editable-element" data-editable="text" style="font-size: 1.15rem; margin-bottom: 40px; max-width: 600px; opacity: 0.8;">Centralize operations, automate rent collection, and increase tenant satisfaction.</p>
-                            <!-- Editable Image -->
+                            <p class="editable-element" data-editable="text" style="font-size: 1.15rem; margin-bottom: 40px; max-width: 600px; opacity: 0.8;">Centralize operations, automate rent collection, and increase tenant satisfaction with one powerful ecosystem.</p>
+                            
                             <div class="t-media-16-9" style="width: 100%; border-radius: var(--radius); box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
                                 <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image">
                             </div>
                         </div>
                     </section>
 
+                    <!-- Section: Features -->
                     <section id="sec-features" class="t-section" style="background: var(--color-surface);">
                         <div class="t-container">
                             <div style="text-align: center; margin-bottom: 50px;">
@@ -172,91 +190,144 @@
                                     <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.25rem;">Tenant Portal</h3>
                                     <p class="editable-element" data-editable="text" style="font-size: 0.9rem; opacity: 0.8;">Dedicated portal for maintenance requests and messages.</p>
                                 </div>
+                                <div class="t-card" style="padding: 30px; text-align: center;">
+                                    <i class="fa-solid fa-chart-line" style="font-size: 2.5rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.25rem;">Yield Analytics</h3>
+                                    <p class="editable-element" data-editable="text" style="font-size: 0.9rem; opacity: 0.8;">Instantly visualize your portfolio's performance.</p>
+                                </div>
                             </div>
                         </div>
                     </section>
-                    
-                    <!-- Additional properties omitted for brevity, logic remains identical -->
                 </div>
             </div>
         </main>
 
-        <!-- RIGHT INSPECTOR -->
+        <!-- RIGHT INSPECTOR (Unified & Complete) -->
         <aside class="right-inspector">
-            <div class="inspector-header" id="inspector-title">Content Editor</div>
+            <div class="inspector-header" id="inspector-title">Colors Settings</div>
             <div class="inspector-body">
                 
-                <!-- PANEL: CONTENT EDITOR (PHASE 4) -->
-                <div id="panel-content" class="inspector-panel">
+                <!-- 1. COLORS PANEL -->
+                <div id="panel-colors" class="inspector-panel">
                     <div class="control-group">
-                        <span class="control-label" id="text-editor-label">Text Content</span>
-                        <p style="font-size: 0.75rem; color: var(--builder-muted); margin-bottom: 15px;">Click any text element on the canvas to edit it.</p>
-                        
-                        <textarea id="inp-text-content" class="form-control-saas d-none" rows="5" placeholder="Select text on canvas..."></textarea>
-                        
-                        <div id="text-empty-state" style="text-align: center; padding: 30px 0; border: 1px dashed var(--builder-border); border-radius: 6px; margin-top: 15px;">
-                            <i class="fa-solid fa-hand-pointer" style="font-size: 1.5rem; color: var(--builder-muted); margin-bottom: 10px;"></i>
-                            <p style="font-size: 0.75rem; color: var(--builder-muted);">No text element selected</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PANEL: MEDIA MANAGER (PHASE 4) -->
-                <div id="panel-media" class="inspector-panel d-none">
-                    <div class="control-group">
-                        <span class="control-label">Image Source</span>
-                        <p style="font-size: 0.75rem; color: var(--builder-muted); margin-bottom: 15px;">Click an image on the canvas to replace it.</p>
-                        
-                        <div id="media-editor-active" class="d-none">
-                            <label style="font-size: 0.8rem; margin-bottom: 8px; display: block;">Upload New Image</label>
-                            <input type="file" id="inp-image-upload" class="form-control-saas" accept="image/*" style="padding: 6px;">
-                            
-                            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--builder-success); color: var(--builder-success); padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 0.75rem;">
-                                <i class="fa-solid fa-shield-halved me-1"></i> Auto-crop active. Your layout is protected from oversized images.
-                            </div>
-                        </div>
-
-                        <div id="media-empty-state" style="text-align: center; padding: 30px 0; border: 1px dashed var(--builder-border); border-radius: 6px; margin-top: 15px;">
-                            <i class="fa-solid fa-image" style="font-size: 1.5rem; color: var(--builder-muted); margin-bottom: 10px;"></i>
-                            <p style="font-size: 0.75rem; color: var(--builder-muted);">No image selected</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Other Panels (Hidden initially) -->
-                <div id="panel-sections" class="inspector-panel d-none">
-                    <div class="control-group">
-                        <span class="control-label">Page Structure</span>
-                        <div class="toggle-row"><span>Navbar</span> <input type="checkbox" class="saas-toggle" data-section="sec-navbar" checked></div>
-                        <div class="toggle-row"><span>Hero Header</span> <input type="checkbox" class="saas-toggle" data-section="sec-hero" checked></div>
-                        <div class="toggle-row"><span>Features Grid</span> <input type="checkbox" class="saas-toggle" data-section="sec-features" checked></div>
-                    </div>
-                </div>
-                
-                <div id="panel-colors" class="inspector-panel d-none">
-                    <!-- Kept intact from Phase 2 -->
-                    <div class="control-group"><span class="control-label">Brand Identity</span>
+                        <span class="control-label">Brand Identity</span>
                         <div class="color-row"><span>Primary Color</span> <input type="color" id="inp-color-primary" value="#1A365D"></div>
                         <div class="color-row"><span>Accent Color</span> <input type="color" id="inp-color-accent" value="#DD6B20"></div>
                     </div>
+                    <div class="control-group">
+                        <span class="control-label">Interface Colors</span>
+                        <div class="color-row"><span>Background Base</span> <input type="color" id="inp-color-bg" value="#F8FAFC"></div>
+                        <div class="color-row"><span>Surface (Cards/Nav)</span> <input type="color" id="inp-color-surface" value="#FFFFFF"></div>
+                        <div class="color-row"><span>Text Primary</span> <input type="color" id="inp-color-text" value="#2D3748"></div>
+                    </div>
                 </div>
 
+                <!-- 2. TYPOGRAPHY PANEL -->
                 <div id="panel-typography" class="inspector-panel d-none">
-                    <!-- Kept intact from Phase 2 -->
+                    <div class="control-group">
+                        <span class="control-label">Font Pairings</span>
+                        <label style="font-size: 0.8rem; margin-bottom: 5px; display: block;">Heading Font</label>
+                        <select id="inp-font-heading" class="form-control-saas">
+                            <option value="'Outfit', sans-serif">Outfit (Modern)</option>
+                            <option value="'Playfair Display', serif">Playfair (Elegant)</option>
+                            <option value="'Inter', sans-serif">Inter (Clean)</option>
+                        </select>
+                        <br>
+                        <label style="font-size: 0.8rem; margin-bottom: 5px; display: block;">Body Font</label>
+                        <select id="inp-font-body" class="form-control-saas">
+                            <option value="'Inter', sans-serif">Inter</option>
+                            <option value="'Roboto', sans-serif">Roboto</option>
+                        </select>
+                    </div>
                 </div>
+
+                <!-- 3. LAYOUT PANEL -->
                 <div id="panel-layout" class="inspector-panel d-none">
-                    <!-- Kept intact from Phase 2 -->
+                    <div class="control-group">
+                        <span class="control-label">Global Structure</span>
+                        <div class="range-row"><label><span>Container Width</span> <span id="val-container">1200px</span></label><input type="range" id="inp-container" min="800" max="1440" value="1200" step="10"></div>
+                        <div class="range-row"><label><span>Section Spacing</span> <span id="val-spacing">80px</span></label><input type="range" id="inp-spacing" min="40" max="150" value="80" step="5"></div>
+                        <div class="range-row"><label><span>Border Radius</span> <span id="val-radius">12px</span></label><input type="range" id="inp-radius" min="0" max="30" value="12" step="1"></div>
+                    </div>
                 </div>
+
+                <!-- 4. SECTIONS MANAGER -->
+                <div id="panel-sections" class="inspector-panel d-none">
+                    <div class="control-group">
+                        <span class="control-label">Page Structure</span>
+                        <div class="toggle-row"><span><i class="fa-solid fa-bars me-2"></i> Navbar</span> <input type="checkbox" class="saas-toggle" data-section="sec-navbar" checked></div>
+                        <div class="toggle-row"><span><i class="fa-solid fa-image me-2"></i> Hero Header</span> <input type="checkbox" class="saas-toggle" data-section="sec-hero" checked></div>
+                        <div class="toggle-row"><span><i class="fa-solid fa-table-cells-large me-2"></i> Features Grid</span> <input type="checkbox" class="saas-toggle" data-section="sec-features" checked></div>
+                    </div>
+                </div>
+
+                <!-- 5. CONTENT EDITOR -->
+                <div id="panel-content" class="inspector-panel d-none">
+                    <div class="control-group">
+                        <span class="control-label" id="text-editor-label">Text Content</span>
+                        <textarea id="inp-text-content" class="form-control-saas d-none" rows="6" placeholder="Select text on canvas..."></textarea>
+                        
+                        <div id="text-empty-state" style="text-align: center; padding: 30px 0; border: 1px dashed var(--builder-border); border-radius: 6px;">
+                            <i class="fa-solid fa-hand-pointer" style="font-size: 1.5rem; color: var(--builder-muted); margin-bottom: 10px;"></i>
+                            <p style="font-size: 0.75rem; color: var(--builder-muted);">Click any text on the canvas to edit it.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. MEDIA MANAGER -->
+                <div id="panel-media" class="inspector-panel d-none">
+                    <div class="control-group">
+                        <span class="control-label">Image Source</span>
+                        <div id="media-editor-active" class="d-none">
+                            <input type="file" id="inp-image-upload" class="form-control-saas" accept="image/*" style="padding: 6px;">
+                            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--builder-success); color: var(--builder-success); padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 0.75rem;">
+                                <i class="fa-solid fa-shield-halved me-1"></i> Aspect-ratio protection is active.
+                            </div>
+                        </div>
+                        <div id="media-empty-state" style="text-align: center; padding: 30px 0; border: 1px dashed var(--builder-border); border-radius: 6px;">
+                            <i class="fa-solid fa-image" style="font-size: 1.5rem; color: var(--builder-muted); margin-bottom: 10px;"></i>
+                            <p style="font-size: 0.75rem; color: var(--builder-muted);">Click an image on the canvas to replace it.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMING SOON -->
+                <div id="panel-comingsoon" class="inspector-panel d-none">
+                    <div style="text-align: center; padding-top: 40px;">
+                        <i class="fa-solid fa-lock" style="font-size: 2rem; color: var(--builder-warning); margin-bottom: 15px;"></i>
+                        <p style="font-size: 0.85rem; color: var(--builder-muted);">This advanced feature is locked for the Enterprise Master Configuration phase.</p>
+                    </div>
+                </div>
+
             </div>
         </aside>
 
     </div>
 
+    <!-- PUBLISH MODAL -->
+    <div class="modal-overlay" id="publish-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span style="font-weight: 600; font-size: 1.1rem;"><i class="fa-solid fa-rocket me-2 text-success"></i> Deployment Successful</span>
+                <button class="viewport-btn" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem; color: var(--builder-muted); margin-bottom: 15px;">The SaaS Engine has successfully compiled your design tokens, modular layout, and customized content into a production-ready JSON Config and DOM structure.</p>
+                
+                <h4 style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 10px; color: #fff;">1. Generated JSON Config</h4>
+                <pre id="output-json"></pre>
+
+                <h4 style="font-size: 0.85rem; text-transform: uppercase; margin-top: 20px; margin-bottom: 10px; color: #fff;">2. Compiled HTML (Stripped from Builder attributes)</h4>
+                <pre id="output-html"></pre>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- UI SHELL LOGIC (Viewport & Nav) ---
-            const viewportBtns = document.querySelectorAll('.viewport-btn');
+            // --- 1. VIEWPORT SWITCHER ---
+            const viewportBtns = document.querySelectorAll('.viewport-btn[data-view]');
             const canvasContainer = document.getElementById('builder-canvas');
             viewportBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -266,6 +337,7 @@
                 });
             });
 
+            // --- 2. UNIFIED NAVIGATION & ROUTING ---
             const navItems = document.querySelectorAll('.nav-item');
             const panels = document.querySelectorAll('.inspector-panel');
             const inspectorTitle = document.getElementById('inspector-title');
@@ -285,79 +357,31 @@
                 });
             });
 
-            // --- PHASE 4: CONTEXT-AWARE CONTENT & MEDIA MANAGER ---
-            let activeElement = null;
-            
-            // Text Editor Elements
-            const textInput = document.getElementById('inp-text-content');
-            const textEmptyState = document.getElementById('text-empty-state');
-            const textLabel = document.getElementById('text-editor-label');
-            
-            // Media Editor Elements
-            const fileInput = document.getElementById('inp-image-upload');
-            const mediaEmptyState = document.getElementById('media-empty-state');
-            const mediaActivePanel = document.getElementById('media-editor-active');
-
-            // Attach Click Listeners to Canvas Elements
-            const editableElements = document.querySelectorAll('.editable-element');
-            
-            editableElements.forEach(el => {
-                el.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation(); // Stop clicking through to parent sections
-                    
-                    // Remove highlight from all
-                    editableElements.forEach(item => item.classList.remove('selected-element'));
-                    
-                    // Add highlight to clicked
-                    this.classList.add('selected-element');
-                    activeElement = this;
-
-                    // CONTEXT ROUTING
-                    const editType = this.getAttribute('data-editable');
-                    
-                    if (editType === 'text') {
-                        // Switch to Text Panel
-                        switchPanel('panel-content', 'Content Editor', 'nav-content');
-                        textEmptyState.classList.add('d-none');
-                        textInput.classList.remove('d-none');
-                        
-                        textLabel.innerText = `EDITING: ${this.tagName}`;
-                        textInput.value = this.innerText;
-                        textInput.focus();
-                    } 
-                    else if (editType === 'image') {
-                        // Switch to Media Panel
-                        switchPanel('panel-media', 'Media Manager', 'nav-media');
-                        mediaEmptyState.classList.add('d-none');
-                        mediaActivePanel.classList.remove('d-none');
-                        
-                        // Reset file input so same file can be uploaded again if needed
-                        fileInput.value = ''; 
-                    }
-                });
-            });
-
-            // Live Text Sync (Typing in sidebar updates canvas)
-            textInput.addEventListener('input', function() {
-                if (activeElement && activeElement.getAttribute('data-editable') === 'text') {
-                    activeElement.innerText = this.value;
+            // --- 3. CSS DESIGN TOKENS ENGINE ---
+            const root = document.getElementById('template-root');
+            const bindCSSVar = (inputId, cssVar, labelId = null, suffix = '') => {
+                const input = document.getElementById(inputId);
+                const label = labelId ? document.getElementById(labelId) : null;
+                if(input) {
+                    input.addEventListener('input', (e) => {
+                        const val = e.target.value;
+                        root.style.setProperty(cssVar, val + suffix);
+                        if(label) label.innerText = val + suffix;
+                    });
                 }
-            });
+            };
+            bindCSSVar('inp-color-primary', '--color-primary');
+            bindCSSVar('inp-color-accent', '--color-accent');
+            bindCSSVar('inp-color-bg', '--color-bg');
+            bindCSSVar('inp-color-surface', '--color-surface');
+            bindCSSVar('inp-color-text', '--color-text');
+            bindCSSVar('inp-font-heading', '--font-heading');
+            bindCSSVar('inp-font-body', '--font-body');
+            bindCSSVar('inp-container', '--container-width', 'val-container', 'px');
+            bindCSSVar('inp-spacing', '--spacing-y', 'val-spacing', 'px');
+            bindCSSVar('inp-radius', '--radius', 'val-radius', 'px');
 
-            // Real File Reader for Local Image Injection
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file && activeElement && activeElement.getAttribute('data-editable') === 'image') {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        activeElement.src = event.target.result;
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Section Toggles (Phase 3 retained)
+            // --- 4. SECTIONS MANAGER ---
             document.querySelectorAll('.saas-toggle').forEach(toggle => {
                 toggle.addEventListener('change', function() {
                     const sectionEl = document.getElementById(this.getAttribute('data-section'));
@@ -365,10 +389,100 @@
                 });
             });
 
-            // CSS Variable Binding (Phase 2 retained)
-            const root = document.getElementById('template-root');
-            document.getElementById('inp-color-primary').addEventListener('input', (e) => root.style.setProperty('--color-primary', e.target.value));
-            document.getElementById('inp-color-accent').addEventListener('input', (e) => root.style.setProperty('--color-accent', e.target.value));
+            // --- 5. CONTEXT-AWARE CONTENT & MEDIA MANAGER ---
+            let activeElement = null;
+            const textInput = document.getElementById('inp-text-content');
+            const textEmptyState = document.getElementById('text-empty-state');
+            const fileInput = document.getElementById('inp-image-upload');
+            const mediaEmptyState = document.getElementById('media-empty-state');
+            const mediaActivePanel = document.getElementById('media-editor-active');
+            const editableElements = document.querySelectorAll('.editable-element');
+
+            editableElements.forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault(); e.stopPropagation();
+                    editableElements.forEach(item => item.classList.remove('selected-element'));
+                    this.classList.add('selected-element');
+                    activeElement = this;
+
+                    const editType = this.getAttribute('data-editable');
+                    if (editType === 'text') {
+                        switchPanel('panel-content', 'Content Editor', 'nav-content');
+                        textEmptyState.classList.add('d-none');
+                        textInput.classList.remove('d-none');
+                        textInput.value = this.innerText;
+                        textInput.focus();
+                    } else if (editType === 'image') {
+                        switchPanel('panel-media', 'Media Manager', 'nav-media');
+                        mediaEmptyState.classList.add('d-none');
+                        mediaActivePanel.classList.remove('d-none');
+                        fileInput.value = ''; 
+                    }
+                });
+            });
+
+            textInput.addEventListener('input', function() {
+                if (activeElement && activeElement.getAttribute('data-editable') === 'text') {
+                    activeElement.innerText = this.value;
+                }
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file && activeElement && activeElement.getAttribute('data-editable') === 'image') {
+                    const reader = new FileReader();
+                    reader.onload = function(event) { activeElement.src = event.target.result; }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // --- 6. PRODUCTION COMPILER (PUBLISH FEATURE) ---
+            const publishBtn = document.getElementById('btn-publish');
+            const publishModal = document.getElementById('publish-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            publishBtn.addEventListener('click', () => {
+                // 1. Generate Config JSON
+                const computedStyles = getComputedStyle(root);
+                const config = {
+                    template: "AuraEstate Master",
+                    timestamp: new Date().toISOString(),
+                    design_tokens: {
+                        colors: {
+                            primary: computedStyles.getPropertyValue('--color-primary').trim(),
+                            accent: computedStyles.getPropertyValue('--color-accent').trim(),
+                            background: computedStyles.getPropertyValue('--color-bg').trim()
+                        },
+                        typography: {
+                            heading: computedStyles.getPropertyValue('--font-heading').trim(),
+                            body: computedStyles.getPropertyValue('--font-body').trim()
+                        },
+                        layout: {
+                            container: computedStyles.getPropertyValue('--container-width').trim(),
+                            spacing: computedStyles.getPropertyValue('--spacing-y').trim(),
+                            radius: computedStyles.getPropertyValue('--radius').trim()
+                        }
+                    },
+                    active_sections: Array.from(document.querySelectorAll('.saas-toggle:checked')).map(t => t.getAttribute('data-section'))
+                };
+                document.getElementById('output-json').innerText = JSON.stringify(config, null, 2);
+
+                // 2. Clone DOM & Clean up builder classes
+                const clonedRoot = root.cloneNode(true);
+                const editables = clonedRoot.querySelectorAll('.editable-element');
+                editables.forEach(el => {
+                    el.classList.remove('editable-element', 'selected-element');
+                    el.removeAttribute('data-editable');
+                });
+                // Formatting HTML string for display
+                const rawHTML = clonedRoot.outerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                document.getElementById('output-html').innerHTML = rawHTML;
+
+                // 3. Show Modal
+                publishModal.classList.add('active');
+            });
+
+            closeModal.addEventListener('click', () => publishModal.classList.remove('active'));
         });
     </script>
 </body>
