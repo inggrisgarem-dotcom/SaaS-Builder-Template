@@ -84,3 +84,349 @@
     </style>
 </head>
 <body>
+    <header class="top-bar">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <i class="fa-solid fa-layer-group" style="color: var(--builder-accent); font-size: 1.2rem;"></i>
+            <span style="font-weight: 600; font-size: 0.9rem;">AuraEstate Master</span>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="display: flex; gap: 5px; background: #0F172A; padding: 4px; border-radius: 8px;">
+                <button class="viewport-btn" id="btn-undo" title="Undo"><i class="fa-solid fa-rotate-left"></i></button>
+                <button class="viewport-btn" id="btn-redo" title="Redo"><i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+            <div style="display: flex; gap: 5px; background: #0F172A; padding: 4px; border-radius: 8px;">
+                <button class="viewport-btn active" data-view="desktop"><i class="fa-solid fa-desktop"></i></button>
+                <button class="viewport-btn" data-view="tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
+                <button class="viewport-btn" data-view="mobile"><i class="fa-solid fa-mobile-screen"></i></button>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-outline" id="btn-export"><i class="fa-solid fa-download me-2"></i> Export</button>
+            <button class="btn-primary" id="btn-publish"><i class="fa-solid fa-rocket me-2"></i> Publish</button>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <aside class="left-sidebar">
+            <span class="section-label">Design System</span>
+            <div class="nav-item active" data-target="panel-colors" id="nav-colors"><i class="fa-solid fa-palette" style="width:20px;"></i> Colors</div>
+            <div class="nav-item" data-target="panel-typography" id="nav-typography"><i class="fa-solid fa-font" style="width:20px;"></i> Typography</div>
+            <div class="nav-item" data-target="panel-layout" id="nav-layout"><i class="fa-solid fa-table-columns" style="width:20px;"></i> Layout Bounds</div>
+            
+            <span class="section-label">Structure</span>
+            <div class="nav-item" data-target="panel-components" id="nav-components"><i class="fa-solid fa-puzzle-piece" style="width:20px;"></i> Components</div>
+            <div class="nav-item" data-target="panel-sections" id="nav-sections"><i class="fa-solid fa-cubes" style="width:20px;"></i> Sections Manager</div>
+            
+            <span class="section-label">Content</span>
+            <div class="nav-item" data-target="panel-content" id="nav-content"><i class="fa-solid fa-pen-nib" style="width:20px;"></i> Content Editor</div>
+            <div class="nav-item" data-target="panel-media" id="nav-media"><i class="fa-solid fa-image" style="width:20px;"></i> Media Manager</div>
+            <div class="nav-item" data-target="panel-embed" id="nav-embed"><i class="fa-solid fa-code" style="width:20px;"></i> Embed System</div>
+        </aside>
+
+        <main class="canvas-area">
+            <div class="canvas-container view-desktop" id="builder-canvas">
+                <div id="template-root">
+                    
+                    <nav id="sec-navbar" class="t-surface" style="padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                        <div class="t-container" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 class="t-heading editable-element" data-editable="text" style="margin: 0; font-size: 1.8rem;">AuraEstate.</h2>
+                            <div style="display: flex; gap: 30px; align-items: center;">
+                                <a href="#" class="editable-element" data-editable="text" style="text-decoration: none; color: var(--color-primary); font-weight: 600;">Features</a>
+                                <a class="t-btn editable-element" data-editable="text">Get Started</a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <section id="sec-hero" class="t-section">
+                        <div class="t-container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                            <h1 class="t-heading editable-element" data-editable="text" style="font-size: 4.5rem; max-width: 900px;">Scale Your Portfolio Faster.</h1>
+                            <p class="editable-element" data-editable="text" style="font-size: 1.25rem; margin-bottom: 40px; opacity: 0.8;">Centralize operations, automate rent collection, and increase tenant satisfaction.</p>
+                            <div class="t-media-16-9" style="width: 100%; border-radius: var(--radius);"><img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image"></div>
+                        </div>
+                    </section>
+
+                    <section id="sec-features" class="t-section" style="background: var(--color-surface);">
+                        <div class="t-container">
+                            <h2 class="t-heading editable-element" data-editable="text" style="font-size: 3rem; text-align: center; margin-bottom: 50px;">Designed for Managers</h2>
+                            <div class="t-grid-3">
+                                <div class="t-card" style="padding: 40px; text-align: center; background: var(--color-bg);">
+                                    <i class="fa-solid fa-wallet" style="font-size: 3rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.5rem;">Automated Billing</h3>
+                                </div>
+                                <div class="t-card" style="padding: 40px; text-align: center; background: var(--color-bg);">
+                                    <i class="fa-solid fa-users-gear" style="font-size: 3rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.5rem;">Tenant Portal</h3>
+                                </div>
+                                <div class="t-card" style="padding: 40px; text-align: center; background: var(--color-bg);">
+                                    <i class="fa-solid fa-chart-line" style="font-size: 3rem; color: var(--color-accent); margin-bottom: 20px;"></i>
+                                    <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.5rem;">Yield Analytics</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- RECOVERED: GALLERY SECTION -->
+                    <section id="sec-gallery" class="t-section">
+                        <div class="t-container">
+                            <h2 class="t-heading editable-element" data-editable="text" style="font-size: 2.5rem; margin-bottom: 40px;">Interior Showcase</h2>
+                            <div class="t-grid-3">
+                                <div class="t-media-4-3" style="border-radius: var(--radius);"><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image"></div>
+                                <div class="t-media-4-3" style="border-radius: var(--radius);"><img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image"></div>
+                                <div class="t-media-4-3" style="border-radius: var(--radius);"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- RECOVERED: PROPERTIES SECTION -->
+                    <section id="sec-properties" class="t-section" style="background: var(--color-primary); color: #fff;">
+                        <div class="t-container">
+                            <h2 class="t-heading editable-element" data-editable="text" style="font-size: 3rem; margin-bottom: 40px; color: #fff;">Active Listings</h2>
+                            <div class="t-grid-2">
+                                <div class="t-card">
+                                    <div class="t-media-16-9"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image"></div>
+                                    <div style="padding: 30px;">
+                                        <p class="editable-element" data-editable="text" style="color: var(--color-accent); font-weight: 800; font-size: 1.5rem; margin-bottom: 8px;">$2,450,000</p>
+                                        <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.25rem;">Beverly Hills Modern Villa</h3>
+                                    </div>
+                                </div>
+                                <div class="t-card">
+                                    <div class="t-media-16-9"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80" class="t-media-fill editable-element" data-editable="image"></div>
+                                    <div style="padding: 30px;">
+                                        <p class="editable-element" data-editable="text" style="color: var(--color-accent); font-weight: 800; font-size: 1.5rem; margin-bottom: 8px;">$850,000</p>
+                                        <h3 class="t-heading editable-element" data-editable="text" style="font-size: 1.25rem;">Downtown Penthouse Suite</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <div id="embed-container"></div>
+
+                    <!-- FOOTER -->
+                    <footer id="sec-footer" class="t-surface" style="padding: 60px 0; text-align: center;">
+                        <div class="t-container">
+                            <h3 class="t-heading editable-element" data-editable="text" style="font-size: 2rem;">AuraEstate.</h3>
+                            <p class="editable-element" data-editable="text" style="opacity: 0.6;">© 2026 Enterprise SaaS. All rights reserved.</p>
+                        </div>
+                    </footer>
+
+                </div>
+            </div>
+        </main>
+        <aside class="right-inspector">
+            <div class="inspector-header" id="inspector-title">Colors Settings</div>
+            <div class="inspector-body">
+                
+                <div id="panel-colors" class="inspector-panel">
+                    <div class="control-group"><span class="control-label">Brand Identity</span>
+                        <div class="color-row"><span>Primary</span> <input type="color" id="inp-color-primary" value="#111827"></div>
+                        <div class="color-row"><span>Accent</span> <input type="color" id="inp-color-accent" value="#2563EB"></div>
+                    </div>
+                    <div class="control-group"><span class="control-label">Interface Colors</span>
+                        <div class="color-row"><span>Background</span> <input type="color" id="inp-color-bg" value="#F8FAFC"></div>
+                        <div class="color-row"><span>Surface</span> <input type="color" id="inp-color-surface" value="#FFFFFF"></div>
+                    </div>
+                </div>
+
+                <div id="panel-typography" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Font Family</span>
+                        <select id="inp-font-heading" class="form-control-saas">
+                            <option value="'Outfit', sans-serif">Outfit (Modern)</option>
+                            <option value="'Montserrat', sans-serif">Montserrat (Corporate)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="panel-layout" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Global Bounds</span>
+                        <div class="range-row"><label><span>Container Max</span> <span id="val-container">1200px</span></label><input type="range" id="inp-container" min="800" max="1440" value="1200" step="10"></div>
+                        <div class="range-row"><label><span>Border Radius</span> <span id="val-radius">12px</span></label><input type="range" id="inp-radius" min="0" max="40" value="12" step="1"></div>
+                    </div>
+                </div>
+
+                <div id="panel-sections" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Visibility</span>
+                        <div class="toggle-row"><span>Navbar</span> <input type="checkbox" class="saas-toggle" data-section="sec-navbar" checked></div>
+                        <div class="toggle-row"><span>Hero Header</span> <input type="checkbox" class="saas-toggle" data-section="sec-hero" checked></div>
+                        <div class="toggle-row"><span>Features Grid</span> <input type="checkbox" class="saas-toggle" data-section="sec-features" checked></div>
+                        <div class="toggle-row"><span>Photo Gallery</span> <input type="checkbox" class="saas-toggle" data-section="sec-gallery" checked></div>
+                        <div class="toggle-row"><span>Properties List</span> <input type="checkbox" class="saas-toggle" data-section="sec-properties" checked></div>
+                        <div class="toggle-row"><span>Footer</span> <input type="checkbox" class="saas-toggle" data-section="sec-footer" checked></div>
+                    </div>
+                </div>
+
+                <div id="panel-components" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Inject Components</span>
+                        <button class="btn-outline" id="inject-cta" style="width: 100%; margin-bottom: 10px;"><i class="fa-solid fa-plus me-2"></i> Call to Action</button>
+                    </div>
+                </div>
+
+                <div id="panel-content" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Text Editor</span>
+                        <textarea id="inp-text-content" class="form-control-saas d-none" rows="6"></textarea>
+                        <div id="text-empty-state" style="text-align: center; padding: 20px 0;"><i class="fa-solid fa-hand-pointer fs-2 text-muted mb-2"></i><p style="font-size:0.8rem; color:var(--builder-muted);">Click text on canvas to edit.</p></div>
+                    </div>
+                </div>
+
+                <div id="panel-media" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Media Manager</span>
+                        <div id="media-editor-active" class="d-none">
+                            <input type="file" id="inp-image-upload" class="form-control-saas" accept="image/*">
+                        </div>
+                        <div id="media-empty-state" style="text-align: center; padding: 20px 0;"><i class="fa-solid fa-image fs-2 text-muted mb-2"></i><p style="font-size:0.8rem; color:var(--builder-muted);">Click image on canvas to replace.</p></div>
+                    </div>
+                </div>
+
+                <div id="panel-embed" class="inspector-panel d-none">
+                    <div class="control-group"><span class="control-label">Custom Embed</span>
+                        <textarea id="inp-embed-code" class="form-control-saas" rows="4" placeholder="<iframe src='...'></iframe>"></textarea>
+                        <button class="btn-primary" id="btn-inject-embed" style="width: 100%;">Inject Code</button>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="publish-modal">
+        <div class="modal-content">
+            <div style="padding: 20px; border-bottom: 1px solid var(--builder-border); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600;"><i class="fa-solid fa-rocket text-success me-2"></i> Publishing Schema</span>
+                <button class="viewport-btn" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <h4 style="font-size:0.85rem; color:#fff; margin-bottom:10px;">1. JSON Manifest</h4>
+                <pre id="output-json" style="max-height: 200px;"></pre>
+                <h4 style="font-size:0.85rem; color:#fff; margin-top:20px; margin-bottom:10px;">2. DOM Tree (Sanitized)</h4>
+                <pre id="output-html" style="max-height: 200px;"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = document.getElementById('template-root');
+            
+            // State Engine (Undo/Redo)
+            let history = []; let historyIndex = -1;
+            function saveState() {
+                if (historyIndex < history.length - 1) history = history.slice(0, historyIndex + 1);
+                history.push(root.innerHTML); historyIndex++;
+            }
+            saveState();
+
+            document.getElementById('btn-undo').addEventListener('click', () => { if(historyIndex > 0) { historyIndex--; root.innerHTML = history[historyIndex]; bindEditables(); }});
+            document.getElementById('btn-redo').addEventListener('click', () => { if(historyIndex < history.length-1) { historyIndex++; root.innerHTML = history[historyIndex]; bindEditables(); }});
+            
+            let timeout;
+            root.addEventListener('input', () => { clearTimeout(timeout); timeout = setTimeout(saveState, 1000); });
+
+            // Viewport
+            document.querySelectorAll('.viewport-btn[data-view]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.viewport-btn[data-view]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById('builder-canvas').className = `canvas-container view-${this.getAttribute('data-view')}`;
+                });
+            });
+
+            // Routing
+            const switchPanel = (targetId, navId) => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                if(navId) document.getElementById(navId).classList.add('active');
+                document.querySelectorAll('.inspector-panel').forEach(p => p.classList.add('d-none'));
+                document.getElementById(targetId).classList.remove('d-none');
+                document.getElementById('inspector-title').innerText = document.getElementById(navId).innerText;
+            };
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() { switchPanel(this.getAttribute('data-target'), this.id); });
+            });
+
+            // CSS Binding
+            const bindCSSVar = (id, cssVar, labelId=null, suffix='') => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    root.style.setProperty(cssVar, e.target.value + suffix);
+                    if(labelId) document.getElementById(labelId).innerText = e.target.value + suffix;
+                    saveState();
+                });
+            };
+            bindCSSVar('inp-color-primary', '--color-primary'); bindCSSVar('inp-color-accent', '--color-accent');
+            bindCSSVar('inp-color-bg', '--color-bg'); bindCSSVar('inp-color-surface', '--color-surface');
+            bindCSSVar('inp-font-heading', '--font-heading');
+            bindCSSVar('inp-container', '--container-width', 'val-container', 'px'); bindCSSVar('inp-radius', '--radius', 'val-radius', 'px');
+
+            // Sections & Injectors
+            document.querySelectorAll('.saas-toggle').forEach(t => t.addEventListener('change', function() {
+                const el = document.getElementById(this.getAttribute('data-section'));
+                if(el) { el.style.display = this.checked ? 'block' : 'none'; saveState(); }
+            }));
+            
+            document.getElementById('inject-cta').addEventListener('click', () => {
+                root.insertAdjacentHTML('beforeend', `<section class="t-section" style="background:var(--color-primary); color:#fff; text-align:center;"><div class="t-container"><h2 class="t-heading editable-element" data-editable="text" style="color:#fff; font-size:2.5rem;">Ready to automate?</h2><button class="t-btn editable-element" data-editable="text" style="margin-top:20px;">Start Trial</button></div></section>`);
+                bindEditables(); saveState();
+            });
+
+            document.getElementById('btn-inject-embed').addEventListener('click', () => {
+                const code = document.getElementById('inp-embed-code').value;
+                if(code) { document.getElementById('embed-container').innerHTML = `<div class="t-container" style="padding:40px 24px;">${code}</div>`; saveState(); }
+            });
+
+            // Context Aware (Editables)
+            let activeElement = null;
+            function bindEditables() {
+                document.querySelectorAll('.editable-element').forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault(); e.stopPropagation();
+                        document.querySelectorAll('.editable-element').forEach(item => item.classList.remove('selected-element'));
+                        this.classList.add('selected-element'); activeElement = this;
+
+                        if (this.getAttribute('data-editable') === 'text') {
+                            switchPanel('panel-content', 'nav-content');
+                            document.getElementById('text-empty-state').classList.add('d-none');
+                            document.getElementById('inp-text-content').classList.remove('d-none');
+                            document.getElementById('inp-text-content').value = this.innerText;
+                        } else if (this.getAttribute('data-editable') === 'image') {
+                            switchPanel('panel-media', 'nav-media');
+                            document.getElementById('media-empty-state').classList.add('d-none');
+                            document.getElementById('media-editor-active').classList.remove('d-none');
+                        }
+                    });
+                });
+            }
+            bindEditables();
+
+            document.getElementById('inp-text-content').addEventListener('input', function() {
+                if(activeElement && activeElement.getAttribute('data-editable') === 'text') { activeElement.innerText = this.value; }
+            });
+
+            document.getElementById('inp-image-upload').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if(file && activeElement && activeElement.getAttribute('data-editable') === 'image') {
+                    const reader = new FileReader();
+                    reader.onload = function(event) { activeElement.src = event.target.result; saveState(); }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Export & Publish
+            document.getElementById('btn-export').addEventListener('click', () => {
+                const data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({schema_version: "2.0", state: history[historyIndex]}));
+                const a = document.createElement('a'); a.href = data; a.download = "saas-template.json";
+                document.body.appendChild(a); a.click(); a.remove();
+            });
+
+            document.getElementById('btn-publish').addEventListener('click', () => {
+                document.getElementById('output-json').innerText = JSON.stringify({ manifest: "AuraEnterprise", version: "1.0", dependencies: ["Inter", "Outfit"] }, null, 2);
+                const cloned = root.cloneNode(true);
+                cloned.querySelectorAll('.editable-element').forEach(el => { el.classList.remove('editable-element', 'selected-element'); el.removeAttribute('data-editable'); });
+                document.getElementById('output-html').innerHTML = cloned.outerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                document.getElementById('publish-modal').classList.add('active');
+            });
+            
+            document.getElementById('close-modal').addEventListener('click', () => document.getElementById('publish-modal').classList.remove('active'));
+        });
+    </script>
+</body>
+</html>
